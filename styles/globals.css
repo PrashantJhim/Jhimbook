@@ -1,0 +1,23 @@
+@import url("https://fonts.googleapis.com/css2?family=Pattaya&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Teko:wght@500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Rajdhani&display=swap");
+/* ./styles/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+#pause {
+  display: none;
+}
+#icons {
+  color: black;
+  width: 9%;
+  margin-right: 0%;
+  height: 5.5vh;
+}
+#icons:hover {
+  color: crimson;
+}
+#follow:hover {
+  background-color: white;
+  color: black;
+}
