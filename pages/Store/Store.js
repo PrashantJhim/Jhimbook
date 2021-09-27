@@ -62,12 +62,24 @@ let ImgUploadReducer = (state=InitailImgDetails,action) =>{
         default:return state
     }
 }
+const InitalFeed = {arr:[]}
+let FeedChanger = (state=InitalFeed,action) =>{
+    switch(action.type){
+        case "Change":return {
+            ...state,
+            arr:action.arr
+
+        }
+        default:return state
+    }
+}
 
 let MainStore = combineReducers({
     Otp:OtpReducer,
     Email:EmailReducer,
     Icon:IconSelector,
-    Upload:ImgUploadReducer
+    Upload:ImgUploadReducer,
+    Feed:FeedChanger
 })
 let Store = createStore(MainStore)
 export default Store 

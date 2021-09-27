@@ -81,6 +81,7 @@ let CheckFollow = async () =>{
 }
 
 let Follow = async( )=>{
+  console.log('okkk')
     const Request = await fetch('/api/Token',{
         method:'POST',
         headers:{"Content-Type":"application/json"},
@@ -94,9 +95,21 @@ let Follow = async( )=>{
         body:JSON.stringify({Email:Response.Email})
     })
     const Photo = await ProfileImg.json()
+
+    const FollowDetail = await fetch('/api/FollowDetails',{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({Email:props.Email})
+    })
+    const GetDetails = await FollowDetail.json()
     const DataToSave = {
         Follow:props.Email,
         by:Response.Email,
+        FollowDetails:{
+          Email:props.Email,
+          FullName:GetDetails.FullName,
+          ProfilePhoto:GetDetails.ProfilePhoto
+        },
         FullDetails:{
             ProfilePhoto:Photo.Src,
             FullName:Response.FullName,

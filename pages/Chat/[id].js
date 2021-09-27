@@ -35,6 +35,7 @@ const Chat = ({details,ID}) =>{
     const [Details,ChangeDetails] = useState({id:undefined,FullName:undefined,ProfilePhoto:undefined})
     const [ArrOfMess,ChangeArr] = useState(details.Messages)
     const [Status,ChangeStatus] = useState('Offline')
+    const [Icon,ChangeIcon]  = useState('/ProfileShow.svg')
     const Router = useRouter()
 
     const FetchDetails = async() =>{
@@ -120,9 +121,6 @@ const Chat = ({details,ID}) =>{
         ListenNotif()
     },[])
 
-    const ProfileOpen = () =>{
-        Router.push('/Profile/'+Details.id)
-    }
     let MapAll = (Arr) =>{
         return (
             <div className = 'mt-5   flex h-auto w-96 flex-col'>
@@ -153,7 +151,33 @@ const Chat = ({details,ID}) =>{
             body:JSON.stringify({Type:'Like',Sender:String(ID),Message:Message})
         })
         const Response = SentMessage.json()
+        document.getElementById('Message').value = ''
+
+        // For Checking User Alreddy Login Or Not 
+        const Request = await fetch('/api/TokenId',{
+        method:'POST',
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({Request:'Token'})
+      })
+      const ResponseO = await Request.json() 
+
+      const RegisterMessage = await fetch('/api/RegisterMessage',{
+          method:"POST",
+          headers:{"Content-Type":"application/json"},
+          body:JSON.stringify({IdOfSender:ResponseO.id,IdOfReceiver:Details.id,Room:ID,Message:Message})
+      })
+      const ResponseMessage = await RegisterMessage.json()
+        
+    }
+}
+    const EnterPressed = (event) =>{
+        if (event.keyCode == 13){
+            Send()
         }
+    }
+    const OnClickChange = () =>{
+        ChangeIcon('/ProfileShow2.svg')
+        Router.push('/Profile/'+Details.id)
     }
     if (Details.id == undefined){
         return (
@@ -165,12 +189,13 @@ const Chat = ({details,ID}) =>{
     if (Details.id != undefined){
         return (
             <div className = '  w-screen  overflow-auto  flex flex-col'>
-    
+            
             <div className = 'flex  fixed bg-white w-screen top-0 border-b h-14 border-black flex-row'>
             <img className = 'w-11 ml-5 mt-1 h-11 rounded-full' src = {Details.ProfilePhoto}/>
             <h1 className = ' relative mt-1 ml-5 text-xl'>
             {Details.FullName}
             <p id = "Status" className = ' absolute left-2 text-sm bottom-1 text-green-600'>{Status}</p>
+            <img onClick = {OnClickChange} src = {Icon}  className = 'fixed top-2 right-5 w-9 h-9'/>
             </h1>
             
             </div>
@@ -179,8 +204,8 @@ const Chat = ({details,ID}) =>{
             </div>
     
             <div className = 'fixed  flex-row flex bottom-5 w-screen'>
-            <input id = "Message" className = 'text-lg pl-5 h-11 ml-5 border border-black rounded w-96' type = 'text' placeholder = 'Enter The Message '/>
-            <button onClick = {Send} className = 'bg-Insta text-white w-24 h-11 rounded ml-5 hover:bg-red-600   text-lg'>Send</button>
+            <input onKeyUp = {EnterPressed} id = "Message" className = 'text-lg pl-5 h-11 ml-5 border border-black rounded w-96' type = 'text' placeholder = 'Enter The Message '/>
+            <button  onClick = {Send} className = 'bg-Insta text-white w-24 h-11 rounded ml-5 hover:bg-red-600   text-lg'>Send</button>
             </div>
             
             

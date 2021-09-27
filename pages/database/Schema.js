@@ -16,6 +16,9 @@ let Schema = new Mongoose.Schema({
         type:String,
         required:true
     },
+    Messages:{
+        type:String
+    },
     Email:{
         type:String,
         required:true
@@ -25,6 +28,8 @@ let Schema = new Mongoose.Schema({
         required:true
     },
     Saved:[],
+    MessageEmail:[{type:String}],
+    MessagesDetails:[{type:Object}],
     Images:[
         {
             type:Object

@@ -120,6 +120,20 @@ let Card = (props) =>{
         }
         
     }
+    const DeleteFeature = async() =>{
+        const id = props.id  
+        const DeletePost = await fetch('/api/DeletePost',{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({id:id})
+        })
+        const GotDeleted = await DeletePost.json() 
+        if (GotDeleted.status == true){
+            router.push('/')
+            router.push('/Home')
+        }
+       
+    }
     // Like Feature 
     let Likefeature = async() =>{
         const Userdata = await fetch('/api/CheckToken')
@@ -154,6 +168,39 @@ let Card = (props) =>{
         const Id = Get.id 
         router.push('/Profile/'+Id)
     }
+    // Navigate to messages Part 
+    let NavigateMessage = async () =>{
+        const Profile = await fetch('/api/SearchId',{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({Email:props.Email})
+        })
+        const Get = await Profile.json() 
+        const Token = await fetch('/api/TokenId') 
+        const GotToken = await Token.json()
+        const PersonClicked = GotToken.id 
+        const PersonToMessage = Get.id 
+        // To Check it is Same or if not navigate to Message 
+        // API For Getting User Details 
+        const Sendrequest = await fetch('/api/ChatDetails',{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({id1:PersonClicked,id2:PersonToMessage})
+        })
+        const ResponseDetails = await Sendrequest.json()
+        const Friend1 = ResponseDetails.Friend1 
+        const Friend2 = ResponseDetails.Friend2 
+
+        const GetIdOfMessage = await fetch('/api/CreateChat',{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({id1:PersonClicked,info1:Friend1,info2:Friend2,id2:PersonToMessage})
+        })
+        const Response = await GetIdOfMessage.json() 
+        if (Response.status == true){
+            router.push('/Chat/'+Response.id)
+        }
+    }
     return (
         <div className = ' flex flex-col w-96 ml-96 h-auto border border-black mt-9 ml-24 rounded overflow-hidden '>
         
@@ -164,13 +211,13 @@ let Card = (props) =>{
         <div id = {Id} className = ' hidden z-20 absolute w-24 h-24 flex -right-4 top-9 flex-col bg-white border border-black rounded font-Secondary  '>
         <button className = 'text-lg border-b border-black hover:text-red-600' onClick = {GoToProfile} >View Profile</button>
         <button className = 'text-lg  border-b border-black hover:text-red-600' onClick = {ShowPost}>View Post</button>
-        <button id = {Button3} className = ' hidden text-lg text-red-600'>Delete</button>
+        <button id = {Button3} className = ' hidden text-lg text-red-600' onClick = {DeleteFeature}>Delete</button>
         </div>
         <div>
         </div>
          </div></div>
         <Media/>
-        <div className = 'flex flex-row h-11 '><button className = 'ml-2  mr-3  h-11' onClick = {Likefeature}><img className = 'w-7 h-7' src = {LikeIcon}/></button><button onClick = {OpenComment} className = 'mr-1 h-11'><img className = 'w-7 h-7' src = 'Comment.svg'/></button><button className = ' h-11 ml-2 mr-2'><img className = '  w-6 h-6' src = 'Message3.svg'/></button></div>
+        <div className = 'flex flex-row h-11 '><button className = 'ml-2  mr-3  h-11' onClick = {Likefeature}><img className = 'w-7 h-7' src = {LikeIcon}/></button><button onClick = {OpenComment} className = 'mr-1 h-11'><img className = 'w-7 h-7' src = 'Comment.svg'/></button><button className = ' h-11 ml-2 mr-2' onClick = {NavigateMessage}><img className = '  w-6 h-6' src = 'Message3.svg'/></button></div>
         <p className = 'ml-1 mr-1'> <strong>{props.FullName}</strong>:- {props.Desc} </p>
         </div>
     )

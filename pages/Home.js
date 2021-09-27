@@ -19,6 +19,7 @@ let Home = ({data}) =>{
     const [ArrOfFeed,ChangeFeedArr] = useState(data.Arr)
     const Length = data.Arr.length 
     const dispatch = useDispatch()
+    console.log(ArrOfFeed)
     // token Fetching 
     let Token = async()=>{
        // For Checking User Alreddy Login Or Not 

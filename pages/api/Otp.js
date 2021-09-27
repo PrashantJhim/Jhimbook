@@ -1,7 +1,7 @@
 const Secure = require('bcryptjs')
 const sendgrid = require('@sendgrid/mail')
 export default async (req,res) =>{
-    const Api = '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'
+    const Api = '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'
     sendgrid.setApiKey(Api)
     
     const Otp = String(Math.floor(Math.random()*10000))
@@ -9,7 +9,7 @@ export default async (req,res) =>{
     var otp = Otp
     let message = {
         to:req.body.Email,
-        from:'pkjhim2016@gmail.com',
+        from:'pkjhim2001@gmail.com',
         subject: "Otp For Verification Of User",
         html: `<div id = 'Container'>
         <div id = 'Main'>

@@ -8,10 +8,28 @@ let Message = () =>{
     const Router = useRouter()
     const [UserArr,ChangeUserArr] = useState([])
     const [SearchArr,ChangeArr] = useState([])
+    const [MessageArr,ChangeMessageArr] = useState([])
     const dispatch = useDispatch()
+    // Fetch Data  
+    const FetchData = async() =>{
+        const FetchToken = await fetch('/api/TokenId') 
+        const GetToken = await FetchToken.json() 
+        const GetData = await fetch('/api/ReadAll',{
+            method:'POST',
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({id:GetToken.id})
+        
+        }
+        )
+        const GotData = await GetData.json()
+        if (GotData.status == true){
+            ChangeMessageArr(GotData.Arr)
+        }
+    }
     useEffect(()=>{
         let IconChange = {type:"Icon",Icon:'Message'}
         dispatch(IconChange)
+        FetchData()
     },[])
     let OnClickChat = async(event) =>{
         const FetchToken = await fetch('/api/TokenId') 
@@ -93,6 +111,21 @@ let Message = () =>{
         document.getElementById('Message').style.display = 'flex'
         document.getElementById('Chat').style.display = 'none'
     }
+
+    const PrintArr = (Arr) =>{
+        const NavigateToMessage = async() =>{
+            Router.push('/Chat/'+Arr.Room)
+        }
+       if (Arr != null){
+        return(
+            <div onClick = {NavigateToMessage} className = ' relative flex border-b mb-2 h-20 border-black flex-row'>
+            <img className = 'w-14 h-14 ml-5 mt-2 rounded-full' src = {Arr.Profile}/>
+            <h1 className = 'ml-5 mt-3 text-lg '>{Arr.FullName}</h1>
+            <p className = 'absolute bottom-3 text-black left-24'>{Arr.Message}</p>
+            </div>
+        )
+       }
+    }
     return (
         <div>
         <head>
@@ -122,11 +155,7 @@ let Message = () =>{
         </button>
         </div>
 
-        <div className = ' relative flex border-b mb-2 h-20 border-black flex-row'>
-        <img className = 'w-14 h-14 ml-5 mt-2 rounded-full' src = 'Register.jpg'/>
-        <h1 className = 'ml-5 mt-3 text-lg '>Prashant Jhim</h1>
-        <p className = 'absolute bottom-3 text-red-600 left-24'>New Message</p>
-        </div>
+        {MessageArr.map(PrintArr)} 
         
         </div>
 
